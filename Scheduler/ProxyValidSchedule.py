@@ -1,30 +1,42 @@
-from Manger.ProxyManger import ProxyManger
+
+
+
 from Util.HelpFunction import checkProxy
+from Manager.ProxyManager import ProxyManager
 
 
-class ProxyValidSchedule(ProxyManger):
+class ProxyValidSchedule(ProxyManager):
     def __init__(self):
-        ProxyManger.__init__(self)
+        ProxyManager.__init__(self)
+        self.log = LogHandler('valid_schedule')
 
-    def refreshProxy(self):
-        self.db.changeName(self.useful_proxy_queue)
-        for proxy in self.db.getList():
-            if isinstance(proxy, bytes):
-                proxy = proxy.decode('utf-8')
+    def __validProxy(self):
+        """
+        验证代理
+        :return:
+        """
+        while True:
+            self.db.changeTable(self.useful_proxy_queue)
+            for each_proxy in self.db.getAll():
+                if isinstance(each_proxy, bytes):
+                    each_proxy = each_proxy.decode('utf-8')
 
-            if checkProxy(proxy):
-                print("%s is valid" % proxy)
-            else:
-                self.db.delete(proxy)
-                print("%s is deleted" % proxy)
+                if checkProxy(each_proxy):
+                    self.log.debug('validProxy_b: {} validation pass'.format(each_proxy))
+                else:
+                    self.db.delete(each_proxy)
+                    self.log.info('validProxy_b: {} validation fail'.format(each_proxy))
+        self.log.info('validProxy_a running normal')
 
     def main(self):
-        self.refresh()
+        self.__validProxy()
 
 
 def run():
     p = ProxyValidSchedule()
     p.main()
 
+
 if __name__ == '__main__':
-    run()
+    p = ProxyValidSchedule()
+    p.main()
