@@ -2,7 +2,7 @@ from Dao.redisClient import RedisClient
 from GetProxy.GetFreeProxy import FreeProxy
 
 
-class ProxyManger(object):
+class ProxyManager(object):
     def __init__(self):
         self.db = RedisClient('proxy', 'localhost', 6379)
         self.raw_proxy_queue = 'raw_proxy'
@@ -48,6 +48,6 @@ class ProxyManger(object):
 
 
 if __name__ == "__main__":
-    pp = ProxyManger()
+    pp = ProxyManager()
     pp.refresh()
     print(pp.getNum())

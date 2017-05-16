@@ -8,7 +8,6 @@ from Manager.ProxyManager import ProxyManager
 class ProxyValidSchedule(ProxyManager):
     def __init__(self):
         ProxyManager.__init__(self)
-        self.log = LogHandler('valid_schedule')
 
     def __validProxy(self):
         """
