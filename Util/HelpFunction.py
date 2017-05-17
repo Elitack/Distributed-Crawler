@@ -31,6 +31,7 @@ def checkProxy(proxy):
         proxies = {
             "https": proxy,
         }
+        return False
     else :
         proxies = {
             "http": proxy,

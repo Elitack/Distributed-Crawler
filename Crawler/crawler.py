@@ -36,6 +36,7 @@ def find_com(driver, company):
 #fun：第一次搜索
 def first_com(driver, company):
     driver.get("http://www.tianyancha.com/")
+    time.sleep(2)
     driver.find_element_by_xpath("//*[@id='ng-view']/div/div[1]/div[2]/div/form/input").send_keys(Keys.TAB)
     driver.find_element_by_xpath("//*[@id='ng-view']/div/div[1]/div[2]/div/form/input").send_keys(company)
     driver.find_element_by_xpath("//*[@id='ng-view']/div/div[1]/div[2]/div/div").click()  # 点击搜索
@@ -124,13 +125,13 @@ def cp_info(driver):
         csvwriter = csv.writer(datacsv)
         csvwriter.writerow([com_name, org_id, reg_id, legal_person, reg_capital, reg_address, reg_time, reg_institution, enterprise_type, issue_time, business_status, business_term, business_type, business_scope])
 
-#p_list = list()
-#p1 = Process(target=ValidRun, name='ValidRun')
-#p_list.append(p1)
-#p2 = Process(target=RefreshRun, name='RefreshRun')
-#p_list.append(p2)
-#for p in p_list:
-#    p.start()
+p_list = list()
+p1 = Process(target=ValidRun, name='ValidRun')
+p_list.append(p1)
+p2 = Process(target=RefreshRun, name='RefreshRun')
+p_list.append(p2)
+for p in p_list:
+    p.start()
 
 pm = ProxyManager()
 pm.refresh()
@@ -157,25 +158,28 @@ i=0
 
 
 while line:
-    i=i+1
-    proxy = webdriver.Proxy()
-    proxy.proxy_type = ProxyType.MANUAL
-    proxy.http_proxy = pm.get()
-    print(proxy.http_proxy)
-    print(pm.getAll())
-    proxy.add_to_capabilities(webdriver.DesiredCapabilities.PHANTOMJS)
-    obj.start_session(webdriver.DesiredCapabilities.PHANTOMJS)
-    print ("ip done")
-    first_com(obj, u"初始化")
-    print("start crawling")
-    flag = str(i)
-    print("searching "+flag+" ...................")
-    re_com = line.strip('\n')
-    line = company.readline()
-    back(obj)         #后退
-    find_com(obj, re_com)       #查找
-    cp_info(obj)         #记录
+    try:
+        i=i+1
 
+        print ("ip done")
+        print("start crawling")
+        flag = str(i)
+        print("searching "+flag+" ...................")
+        re_com = line.strip('\n')
+        line = company.readline()
+        proxy = webdriver.Proxy()
+        proxy.proxy_type = ProxyType.MANUAL
+        proxy.http_proxy = pm.get().decode("utf-8").strip("https://").strip("http://")
+        print (proxy.http_proxy)
+        proxy.add_to_capabilities(webdriver.DesiredCapabilities.PHANTOMJS)
+        obj.start_session(webdriver.DesiredCapabilities.PHANTOMJS)
+        obj.get("http://www.tianyancha.com/")         #后退
+        time.sleep(5)
+        find_com(obj, re_com)       #查找
+        cp_info(obj)         #记录
+    except Exception as err:
+        print (err)
+        print (obj.page_source)
 
 
 
