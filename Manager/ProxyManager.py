@@ -25,7 +25,7 @@ class ProxyManager(object):
         self.db.changeName(self.raw_proxy_queue)
         for proxy in proxy_set:
             self.db.put(proxy)
-        print (self.db.getNumber())
+
 
     def get(self):
         self.db.changeName(self.useful_proxy_queue)
@@ -36,8 +36,8 @@ class ProxyManager(object):
         self.db.delete(proxy)
 
     def getAll(self):
-        self.db.changeName(self.useful_proxy_queue)
-        self.db.getList()
+        self.db.changeName(self.raw_proxy_queue)
+        return self.db.getList()
 
     def getNum(self):
         self.db.changeName(self.raw_proxy_queue)

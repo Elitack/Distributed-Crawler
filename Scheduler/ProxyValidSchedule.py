@@ -17,7 +17,7 @@ class ProxyValidSchedule(ProxyManager):
             self.db.changeName(self.useful_proxy_queue)
             for each_proxy in self.db.getList():
                 if isinstance(each_proxy, bytes):
-                    each_proxy = each_proxy.decode('utf-8')
+                    each_proxy = each_proxy
 
                 if checkProxy(each_proxy):
                     self.log.debug('validProxy_b: {} validation pass'.format(each_proxy))
