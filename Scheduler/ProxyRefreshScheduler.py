@@ -1,5 +1,5 @@
 import time
-from Manger.ProxyManger import ProxyManger
+from Manager.ProxyManager import ProxyManager
 from Util.HelpFunction import checkProxy
 
 from threading import Thread
@@ -12,16 +12,16 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 
 sys.path.append('../')
 
-class ProxyRefreshScheduler(ProxyManger):
+class ProxyRefreshScheduler(ProxyManager):
     def __init__(self):
-        ProxyManger.__init__(self)
+        ProxyManager.__init__(self)
 
     def validProxy(self):
         self.db.changeName(self.raw_proxy_queue)
 
         raw_proxy = self.db.pop()
         self.db.changeName(self.useful_proxy_queue)
-        exist_proxy = self.db.getList()
+        exist_proxy = self.db.getAll()
 
         while raw_proxy:
             if checkProxy(raw_proxy) and (raw_proxy not in exist_proxy):

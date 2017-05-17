@@ -15,13 +15,17 @@ class ProxyManager(object):
             if proxy.strip():
                 proxy_set.add(proxy.strip())
 
+
         for proxy in FreeProxy().getSecondFreeProxy():
             if proxy.strip():
                 proxy_set.add(proxy.strip())
 
+
+
         self.db.changeName(self.raw_proxy_queue)
         for proxy in proxy_set:
             self.db.put(proxy)
+        print (self.db.getNumber())
 
     def get(self):
         self.db.changeName(self.useful_proxy_queue)

@@ -8,7 +8,7 @@ class RedisClient(object):
         self.conn = redis.Redis(host=host, port=port, db=0)
 
     def get(self):
-        return self.conn.srandmember(name=self.name).decode('utf-8')
+        return self.conn.srandmember(name=self.name)
 
     def put(self, value):
         value = json.dumps(value) if isinstance(value, (dict, list)) else value

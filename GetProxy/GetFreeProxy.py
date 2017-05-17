@@ -1,5 +1,10 @@
 import requests
 import re
+
+import sys
+
+sys.path.append('../')
+
 from Util import HelpFunction
 
 

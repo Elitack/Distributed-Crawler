@@ -1,9 +1,20 @@
-### 移动端代码（暂时无反爬） ###
+# -*- coding:utf-8 -*-
 import time
 import csv
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.common.proxy import ProxyType
+
+import sys
+from multiprocessing import Process
+
+sys.path.append('../')
+
+from Scheduler.ProxyValidSchedule import run as ValidRun
+from Scheduler.ProxyRefreshScheduler import run as RefreshRun
+
+from Manager.ProxyManager import ProxyManager
 
 #fun：查找公司
 def find_com(driver, company):
@@ -113,34 +124,57 @@ def cp_info(driver):
         csvwriter = csv.writer(datacsv)
         csvwriter.writerow([com_name, org_id, reg_id, legal_person, reg_capital, reg_address, reg_time, reg_institution, enterprise_type, issue_time, business_status, business_term, business_type, business_scope])
 
+#p_list = list()
+#p1 = Process(target=ValidRun, name='ValidRun')
+#p_list.append(p1)
+#p2 = Process(target=RefreshRun, name='RefreshRun')
+#p_list.append(p2)
+#for p in p_list:
+#    p.start()
+
+pm = ProxyManager()
+pm.refresh()
+print (pm.getNum())
+
 
 dcap = dict(DesiredCapabilities.PHANTOMJS)  # 设置userAgent
 
 #使用移动端浏览器ua
 dcap["phantomjs.page.settings.userAgent"] = ("Mozilla/5.0 (Linux; Android 5.1.1; Nexus 6 Build/LYZ28E) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.23 Mobile Safari/537.36")
 
-#调用phantomjs
-obj = webdriver.PhantomJS(executable_path=r"C:\Users\hjw99868\Desktop\phantomjs-1.9.7-windows\phantomjs.exe", desired_capabilities=dcap)
+
+
+obj = webdriver.PhantomJS(executable_path="/home/jack/Downloads/App/phantomjs-2.1.1-linux-x86_64/bin/phantomjs", desired_capabilities=dcap)
 obj.maximize_window()
 
 #初始化搜索
-first_com(obj, "初始化")
+first_com(obj, u"初始化")
 
-company = open("test.txt", 'r', encoding='utf-8')
+company = open("../web_ch.txt", 'r', encoding='gbk')
 line = company.readline()
+
 i=0
+
+
 while line:
-    try:
-        i=i+1
-        flag = str(i)
-        print("searching "+flag+" ...................")
-        re_com = line.strip('\n')
-        line = company.readline()
-        back(obj)         #后退
-        find_com(obj, re_com)       #查找
-        cp_info(obj)         #记录
-    except Exception as err:
-        print(err)
+    i=i+1
+    proxy = webdriver.Proxy()
+    proxy.proxy_type = ProxyType.MANUAL
+    proxy.http_proxy = pm.get()
+    print(proxy.http_proxy)
+    print(pm.getAll())
+    proxy.add_to_capabilities(webdriver.DesiredCapabilities.PHANTOMJS)
+    obj.start_session(webdriver.DesiredCapabilities.PHANTOMJS)
+    print ("ip done")
+    first_com(obj, u"初始化")
+    print("start crawling")
+    flag = str(i)
+    print("searching "+flag+" ...................")
+    re_com = line.strip('\n')
+    line = company.readline()
+    back(obj)         #后退
+    find_com(obj, re_com)       #查找
+    cp_info(obj)         #记录
 
 
 
