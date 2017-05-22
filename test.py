@@ -9,11 +9,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.common.proxy import ProxyType
 import requests
-#pm = ProxyManager()
-#pm.refresh()
-#p1 = Process(target=ValidRun, name='ValidRun')
-#p1.start()
-#print (pm.get())
+
 
 dcap = dict(DesiredCapabilities.PHANTOMJS)  # 设置userAgent
 
@@ -29,13 +25,13 @@ obj.get_screenshot_as_file("/home/jack/Documents/test2.png")
 print ("tianyancha done")
 proxy = webdriver.Proxy()
 proxy.proxy_type = ProxyType.MANUAL
-proxy.http_proxy = "1183.153.28.37:808"
+proxy.http_proxy = "175.169.131.123:8118"
 proxy.add_to_capabilities(webdriver.DesiredCapabilities.PHANTOMJS)
 obj.start_session(webdriver.DesiredCapabilities.PHANTOMJS)
 
 
-r = requests.get('http://www.tianyancha.com/', proxies={"http" : "http://1183.153.28.37:808"}, timeout=5, verify=False)
+r = requests.get('http://www.tianyancha.com/', proxies={"http" : "http://175.169.131.123:8118"}, timeout=5, verify=False)
 print (r.status_code)
-obj.get("http://www.baidu.com/")
+obj.get("http://www.tianyancha.com/")
 print (obj.page_source)
 obj.get_screenshot_as_file("/home/jack/Documents/test.png")
