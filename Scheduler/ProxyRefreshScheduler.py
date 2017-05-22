@@ -20,7 +20,6 @@ class ProxyRefreshScheduler(ProxyManager):
         self.db.changeName(self.raw_proxy_queue)
 
         raw_proxy = self.db.pop()
-        self.db.changeName(self.useful_proxy_queue)
         exist_proxy = self.db.getAll()
 
         while raw_proxy:

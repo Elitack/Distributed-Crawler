@@ -9,6 +9,10 @@ class ProxyManager(object):
         self.useful_proxy_queue = 'useful_proxy'
 
     def refresh(self):
+
+        self.db.deleteAll('proxy')
+        self.db.deleteAll('raw_proxy')
+        self.db.deleteAll('useful_proxy')
         proxy_set = set()
 
         for proxy in FreeProxy().getFirstFreeProxy():

@@ -32,10 +32,13 @@ class RedisClient(object):
     def changeName(self, name):
         self.name = name
 
+    def deleteAll(self, name):
+        while self.conn.scard(name) != 0:
+            self.conn.spop(name)
 
 if __name__ == "__main__":
-    redis_conn = RedisClient('proxy', 'localhost', 6379)
+    redis_conn = RedisClient('useful_proxy', 'localhost', 6379)
     redis_conn.put("0.0.0.0:0000")
 
-    print(redis_conn.pop())
+
     print(redis_conn.getList())

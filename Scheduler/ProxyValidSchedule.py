@@ -18,10 +18,10 @@ class ProxyValidSchedule(ProxyManager):
             for each_proxy in self.db.getList():
                 if isinstance(each_proxy, bytes):
                     each_proxy = each_proxy.decode('utf-8')
-
                 if checkProxy(each_proxy):
                     self.db.changeName(self.useful_proxy_queue)
                     self.db.put(each_proxy)
+                    print (each_proxy)
                     self.db.changeName(self.raw_proxy_queue)
                 else:
                     self.db.delete(each_proxy)
